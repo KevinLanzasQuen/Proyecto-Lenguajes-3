@@ -4,8 +4,8 @@
  */
 package sudokux;
 package Vistas;
-
 import Vistas.ventanaInicial;
+import org.jpl7.Query;
 
 /**
  *
@@ -23,3 +23,7 @@ public class SudokuX {
     }
     
 }
+
+
+
+
