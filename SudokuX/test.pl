@@ -16,14 +16,6 @@ matrizPistas(R):-
 crearLista1_9(I,R):-
         randseq(I, 9, R).
 
-
-listaPistas(R):-
-        randseq(3, 3, [A,B,C]),
-        randseq(3, 3, [D,E,F]),
-        randseq(3, 3, [G,H,I]),
-        R = [A,B,C,D,E,F,G,H,I].
-
-
 sudoku(Rowx) :-
         length(Rowx, 9),
         maplist(same_length(Rowx), Rowx),!,

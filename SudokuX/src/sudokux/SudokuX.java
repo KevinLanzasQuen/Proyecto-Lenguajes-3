@@ -11,11 +11,27 @@ import java.util.*;
  * @author Kevin y Jordi
  */
 public class SudokuX {
-
+    public static List<String[]> matrizDePistas = matrizPistas();
+    public static List<String[]> matrizSolucion = matrizSudoku();
+    
     public static void main(String[] args) {
         ventanaInicial v1 = new ventanaInicial();
         v1.setLocationRelativeTo(null);
         v1.setVisible(true);
+        System.out.print(matrizDePistas.get(0)[0]);
+        for(int k = 0; k<9;k++){
+            System.out.print("\n");
+            for(int h = 0; h<2;h++){
+                System.out.print(matrizDePistas.get(k)[h]);
+            }
+        }
+        System.out.print(matrizSolucion.get(0)[0]);
+        for(int k = 0; k<9;k++){
+            System.out.print("\n");
+            for(int h = 0; h<9;h++){
+                System.out.print(matrizSolucion.get(k)[h]);
+            }
+        }
     }
 
     public static List<String[]> matrizPistas(){
