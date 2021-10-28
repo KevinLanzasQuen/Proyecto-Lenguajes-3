@@ -10,6 +10,9 @@ import java.util.*;
  *
  * @author Kevin y Jordi
  */
+
+
+
 public class SudokuX {
     public static List<String[]> matrizDePistas = matrizPistas();
     public static List<String[]> matrizSolucion = matrizSudoku();
@@ -67,10 +70,10 @@ public class SudokuX {
     }
     
     public static List<String[]> matrizSudoku(){
-        String[] Opc = {"problem(1,R),sudoku(R),maplist(label,R),!.","problem1(1,R),sudoku(R),maplist(label,R),!.","problem2(2,R),sudoku(R),maplist(label,R),!.","problem3(1,R),sudoku(R),maplist(label,R),!.","problem4(1,R),sudoku(R),maplist(label,R),!.","problem5(5,R),sudoku(R),maplist(label,R),!.","problem6(6,R),sudoku(R),maplist(label,R),!.","problem7(7,R),sudoku(R),maplist(label,R),!."};
+        String[] Opc = {"problem(1,R),sudoku(R),maplist(label,R),!.","problem1(1,R),sudoku(R),maplist(label,R),!.","problem2(2,R),sudoku(R),maplist(label,R),!.","problem3(1,R),sudoku(R),maplist(label,R),!.","problem4(1,R),sudoku(R),maplist(label,R),!.","problem5(5,R),sudoku(R),maplist(label,R),!.","problem6(6,R),sudoku(R),maplist(label,R),!.","problem7(7,R),sudoku(R),maplist(label,R),!.","problem8(8,R),sudoku(R),maplist(label,R),!.","problem9(9,R),sudoku(R),maplist(label,R),!.","problem10(10,R),sudoku(R),maplist(label,R),!.","problem11(11,R),sudoku(R),maplist(label,R),!.","problem12(12,R),sudoku(R),maplist(label,R),!.","problem13(13,R),sudoku(R),maplist(label,R),!."};
         Query q = new Query("consult('test.pl')");
         q.hasSolution();
-        int valorDado = (int) Math.floor(Math.random()*8);
+        int valorDado = (int) Math.floor(Math.random()*13);
         q = new Query(Opc[valorDado]);
         Map<String, Term>[] res = q.allSolutions();
         List<String[]> testList = new ArrayList<String[]>();
