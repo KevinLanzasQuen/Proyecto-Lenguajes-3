@@ -1,6 +1,71 @@
-
 :- use_module(library(clpfd)).
 
+iguales(A,B,R):-
+        A =\= B,
+        R is 0.
+iguales(A,B,R):-
+        A=B,
+        R is 1.
+
+similitudFilas([A,B,C,D,E,F,G,H,I],[A1,B1,C1,D1,E1,F1,G1,H1,I1],R):-
+        iguales(A,A1,Q1),
+        iguales(B,B1,Q2),
+        iguales(C,C1,Q3),
+        iguales(D,D1,Q4),
+        iguales(E,E1,Q5),
+        iguales(F,F1,Q6),
+        iguales(G,G1,Q7),
+        iguales(H,H1,Q8),
+        iguales(I,I1,Q9),
+        R is Q1+Q2+Q3+Q4+Q5+Q6+Q7+Q8+Q9.
+
+similitudMatrices([A,B,C,D,E,F,G,H,I],[A1,B1,C1,D1,E1,F1,G1,H1,I1],R):-
+        similitudFilas(A,A1,Q1),
+        similitudFilas(B,B1,Q2),
+        similitudFilas(C,C1,Q3),
+        similitudFilas(D,D1,Q4),
+        similitudFilas(E,E1,Q5),
+        similitudFilas(F,F1,Q6),
+        similitudFilas(G,G1,Q7),
+        similitudFilas(H,H1,Q8),
+        similitudFilas(I,I1,Q9),
+        R is Q1+Q2+Q3+Q4+Q5+Q6+Q7+Q8+Q9.
+
+ /*----------------------------------------------------*/
+
+verificarEspaciosLibres([A,B,C,D,E,F,G,H,I],R):-
+        verificaListaCero(A,P1),
+        verificaListaCero(B,P2),
+        verificaListaCero(C,P3),
+        verificaListaCero(D,P4),
+        verificaListaCero(E,P5),
+        verificaListaCero(F,P6),
+        verificaListaCero(G,P7),
+        verificaListaCero(H,P8),
+        verificaListaCero(I,P9),
+        R is P1+P2+P3+P4+P5+P6+P7+P8+P9.
+
+verificaListaCero([A,B,C,D,E,F,G,H,I],R):-
+        esCero(A,R1),
+        esCero(B,R2),
+        esCero(C,R3),
+        esCero(D,R4),
+        esCero(E,R5),
+        esCero(F,R6),
+        esCero(G,R7),
+        esCero(H,R8),
+        esCero(I,R9),
+        R is R1+R2+R3+R4+R5+R6+R7+R8+R9.
+
+esCero(A,R):-
+        A =\= 0,
+        R is 0.
+
+esCero(A,R):-
+        A = 0,
+        R is 1.
+
+/*------------------------------------------------------*/
 matrizPistas(R):-
         crearLista1_9(2,P1),
         crearLista1_9(2,P2),
@@ -114,6 +179,7 @@ validarPos(Num,Pos,[L|_],PosAct) :-
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    Matrices Disponibles para jugar con soluciones posiblemente diferentes
+   Se utilizan estas plantillas para acelerar el proceso de aleatoriedad.
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 problem(1, P) :-
@@ -205,3 +271,71 @@ problem7(7, P) :-
              [1,_,8,_,_,2,_,_,4],
              [7,_,2,_,_,4,_,_,5],
              [_,_,4,8,_,_,_,2,7]],!.
+
+problem8(8, P) :-
+        P = [[3,1,_,_,8,9,_,_,7],
+             [5,9,_,1,_,7,_,2,_],
+             [7,_,2,_,6,_,4,_,9],
+             [8,_,1,_,2,_,_,9,_],
+             [_,7,_,_,1,_,2,5,_],
+             [_,6,_,9,7,_,3,8,_],
+             [1,3,_,7,_,2,_,4,_],
+             [_,_,9,8,_,6,_,7,_],
+             [6,_,7,_,5,_,_,3,_]],!.
+
+problem9(9, P) :-
+        P = [[6,7,_,_,8,4,_,_,3],
+             [5,1,_,6,_,7,_,8,_],
+             [8,_,9,_,2,_,6,_,7],
+             [1,_,7,_,6,_,_,_,5],
+             [_,3,_,_,5,_,7,6,_],
+             [_,6,_,4,7,_,1,2,_],
+             [3,5,_,7,_,2,_,9,_],
+             [_,_,8,9,_,6,_,7,_],
+             [7,_,6,_,1,_,_,3,_]],!.
+
+problem10(10, P) :-
+        P = [[2,9,_,_,7,4,_,_,3],
+             [3,4,_,1,_,2,_,8,_],
+             [1,_,8,_,3,_,6,_,2],
+             [8,_,1,_,4,_,_,7,_],
+             [_,3,_,_,5,_,8,6,_],
+             [_,6,_,7,8,_,9,2,_],
+             [6,5,_,4,_,7,_,3,_],
+             [_,_,3,5,_,8,_,9,_],
+             [4,_,9,_,1,_,_,5,_]],!.
+
+problem11(11, P) :-
+        P = [[3,5,_,9,_,4,_,_,7],
+             [1,9,_,_,5,_,4,6,_],
+             [7,4,_,6,_,_,5,_,9],
+             [2,1,_,_,3,_,6,_,5],
+             [_,6,3,_,1,_,_,8,_],
+             [_,8,7,_,_,6,3,9,_],
+             [6,_,4,_,_,5,2,_,3],
+             [8,_,_,_,_,2,_,_,6],
+             [_,_,5,1,_,_,_,7,_]],!.
+
+problem12(12, P) :-
+        P = [[7,8,9,_,_,2,_,_,_],
+             [5,1,_,_,4,_,7,8,_],
+             [3,4,_,_,_,9,5,_,2],
+             [2,5,_,_,_,1,4,_,_],
+             [_,3,4,_,2,_,_,9,_],
+             [_,9,1,_,_,5,8,_,7],
+             [_,6,3,_,_,4,_,5,_],
+             [4,_,5,_,_,8,_,_,1],
+             [9,_,8,1,_,_,_,7,_]],!.
+
+
+problem13(13, P) :-
+        P = [[8,1,2,_,_,5,_,6,_],
+             [3,7,_,_,_,_,2,_,8],
+             [5,9,_,_,_,2,4,1,_],
+             [2,4,_,_,_,3,5,_,_],
+             [6,_,_,8,2,_,_,4,_],
+             [_,_,9,_,_,4,1,_,2],
+             [_,6,_,5,_,8,_,2,_],
+             [9,_,5,_,1,7,_,_,4],
+             [1,_,3,4,_,_,_,7,_]],!.
+
