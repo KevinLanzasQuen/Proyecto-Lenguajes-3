@@ -5,14 +5,16 @@
 package Vistas;
 
 /**
- *
- * @author kevin
+ * clase ventanaInicial la cual se encarga de crear la ventana inicial
+ * @author  Jordi Segura,Kevin Lanzas
+ * @extend javax.swing.JFrame
  */
 public class ventanaInicial extends javax.swing.JFrame {
 
-    /**
-     * Creates new form ventanaInicial
-     */
+/**
+ * Metodo constructor de la ventana de inicial el cual se encarga de inicializar todos los componentes necesarios para crear la ventana.
+ * @author  Jordi Segura, Kevin Lanzas
+ */
     public ventanaInicial() {
         initComponents();
     }
@@ -66,7 +68,10 @@ public class ventanaInicial extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+/**
+ * Metodo de accion de boton el cual se encarga de cerrar la ventana incial y mostrar la ventana de juego
+ * @author Jordi Segura, Kevin Lanzas
+ */
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         ventanaJuego juego = new ventanaJuego();
         juego.setLocationRelativeTo(null);
@@ -74,9 +79,10 @@ public class ventanaInicial extends javax.swing.JFrame {
         super.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
+/**
+ * Metodo main de la ventana
+ * @author Jordi Segura, Kevin Lanzas
+ */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">

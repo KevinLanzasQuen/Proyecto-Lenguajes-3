@@ -5,14 +5,15 @@
 package Vistas;
 
 /**
- *
- * @author kevin
+ * clase ventanaErrorSugerencia el cual se encarga de mostrar la ventana de error de sugerencia
+ * @author  Jordi Segura, Kevin Lanzas
  */
 public class ventanaErrorSugerencia extends javax.swing.JFrame {
 
-    /**
-     * Creates new form ventanaErrorSugerencia
-     */
+/**
+ * Metodo constructor de la ventana de error de sugerencia inicializando los componentes necesarios
+ * @author  Jordi Segura, Kevin Lanzas
+ */
     public ventanaErrorSugerencia() {
         initComponents();
     }
@@ -71,14 +72,18 @@ public class ventanaErrorSugerencia extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+/**
+ * Metodo de accion del boton aceptar el cual se encarga de cerrar la ventana de error de sugerencia
+ * @author  Jordi Segura, Kevin Lanzas
+ */
     private void botonAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAceptarActionPerformed
         super.dispose();
     }//GEN-LAST:event_botonAceptarActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
+/**
+ * Metodo main de la ventana error de sugerencia
+ * @author  Jordi Segura, Kevin Lanzas
+ */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">

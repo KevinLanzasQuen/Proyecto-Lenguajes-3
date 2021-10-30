@@ -5,15 +5,25 @@
 package Vistas;
 
 import Vistas.ventanaJuego;
+import static Vistas.ventanaJuego.estadisticaDigitos;
+import static Vistas.ventanaJuego.estadisticaErrores;
+import static Vistas.ventanaJuego.estadisticaSugerencia;
+import static Vistas.ventanaJuego.estadisticasVerificar;
+import static Vistas.ventanaJuego.pistas;
+import static Vistas.ventanaJuego.solucion;
+import sudokux.SudokuX;
+
 /**
- *
- * @author kevin
+ * clase ventanaEstadisticas la cual se encarga de crear la ventana de estadisticas al generar un nuevo juego
+ * @author  Kevin Lanzas, Jordi Segura
+ * @extend javax.swing.JFrame
  */
 public class ventanaEstadisticas extends javax.swing.JFrame {
 
-    /**
-     * Creates new form ventanaEstadisticas
-     */
+/**
+ * Metodo constructor de la ventana de estadisticas el cual se encarag de inicializar todos los componentes necesarios para crear la ventana y poner tdos los datos en la ventana.
+ * @author  Jordi Segura, Kevin Lanzas
+ */
     public ventanaEstadisticas() {
         initComponents();
         cantidadSug.setText("La cantidad de sugerencias utilizadas es: " + String.valueOf(ventanaJuego.estadisticaSugerencia));
@@ -21,6 +31,7 @@ public class ventanaEstadisticas extends javax.swing.JFrame {
         tipoFinalizado.setText("El tipo finalizado fue por abandono");
         cantidadDigitos.setText("La cantidad de digitos insertados fue: " + String.valueOf(ventanaJuego.estadisticaDigitos));
         cantidadErrores.setText("La cantidad de errores verificados es " + String.valueOf(ventanaJuego.estadisticaErrores));
+        cronometro.setText("El tiempo jugado es: " + ventanaJuego.c.time);
     }
 
     /**
@@ -41,8 +52,10 @@ public class ventanaEstadisticas extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         botonAceptar = new javax.swing.JButton();
         cantidadErrores = new javax.swing.JLabel();
+        cronometro = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Estadisticas");
 
         jPanel1.setBackground(new java.awt.Color(102, 255, 102));
 
@@ -71,6 +84,8 @@ public class ventanaEstadisticas extends javax.swing.JFrame {
 
         cantidadErrores.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
 
+        cronometro.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -90,9 +105,10 @@ public class ventanaEstadisticas extends javax.swing.JFrame {
                             .addComponent(tipoFinalizado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cantidadDigitos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cantidadSug, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cantVerificaciones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(cantVerificaciones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cronometro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(215, 215, 215)
+                        .addGap(214, 214, 214)
                         .addComponent(botonAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(87, Short.MAX_VALUE))
         );
@@ -113,9 +129,11 @@ public class ventanaEstadisticas extends javax.swing.JFrame {
                 .addComponent(tipoFinalizado, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(cantidadErrores, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cronometro, javax.swing.GroupLayout.DEFAULT_SIZE, 16, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(botonAceptar)
-                .addGap(23, 23, 23))
+                .addGap(16, 16, 16))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -131,14 +149,29 @@ public class ventanaEstadisticas extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+/**
+ * Metodo de accion de boton el cual se encarga de cerrar la ventana de estadisticas y generar el nuevo tablero
+ * @author Jordi Segura, Kevin Lanzas
+ */
     private void botonAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAceptarActionPerformed
         super.dispose();
+        pistas = SudokuX.matrizPistas();
+        solucion = SudokuX.matrizSudoku();
+        
+        ventanaJuego tablero = new ventanaJuego();
+        super.setVisible(false);
+        tablero.setVisible(true);
+        tablero.setLocationRelativeTo(null);
+        estadisticaSugerencia = 0;
+        estadisticaDigitos = 0;
+        estadisticasVerificar =0;
+        estadisticaErrores = 0;
     }//GEN-LAST:event_botonAceptarActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
+ /**
+ * Metodo main de la ventana
+ * @author Jordi Segura, Kevin Lanzas
+ */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -177,6 +210,7 @@ public class ventanaEstadisticas extends javax.swing.JFrame {
     private javax.swing.JLabel cantidadDigitos;
     private javax.swing.JLabel cantidadErrores;
     private javax.swing.JLabel cantidadSug;
+    private javax.swing.JLabel cronometro;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;

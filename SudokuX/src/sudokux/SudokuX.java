@@ -7,16 +7,17 @@ import org.jpl7.Term;
 import java.util.*;
 
 /**
- *
- * @author Kevin y Jordi
+ * Clase sudokuX la cual se encarga de presentar la ventana inicial del juego y traer la matriz solucion y la matriz de pistas de prolog
+ * @author Jordi Segura ,Kevin Lanzas
  */
-
-
-
 public class SudokuX {
     public static List<String[]> matrizDePistas = matrizPistas();
     public static List<String[]> matrizSolucion = matrizSudoku();
     
+ /**
+ * Metofo main el cual se encarga de cargar la ventana principal 
+ * @author Jordi Segura, Kevin Lanzas
+ */
     public static void main(String[] args) {
         ventanaInicial v1 = new ventanaInicial();
         v1.setLocationRelativeTo(null);
@@ -37,6 +38,10 @@ public class SudokuX {
         }
     }
 
+ /**
+ * Metodo matrizPistas el cual se encarga de traer la matriz de pistas de prolog
+ * @author Jordi Segura, Kevin Lanzas
+ */
     public static List<String[]> matrizPistas(){
         Query q = new Query("consult('test.pl')");
         q.hasSolution();
@@ -68,7 +73,11 @@ public class SudokuX {
         }
         return testList;
     }
-    
+
+/**
+ * Metodo matrizSudoku el cual se encarga de traer la matriz de solucion de Prolog
+ * @author Jordi Segura, Kevin Lanzas
+ */    
     public static List<String[]> matrizSudoku(){
         String[] Opc = {"problem(1,R),sudoku(R),maplist(label,R),!.","problem1(1,R),sudoku(R),maplist(label,R),!.","problem2(2,R),sudoku(R),maplist(label,R),!.","problem3(1,R),sudoku(R),maplist(label,R),!.","problem4(1,R),sudoku(R),maplist(label,R),!.","problem5(5,R),sudoku(R),maplist(label,R),!.","problem6(6,R),sudoku(R),maplist(label,R),!.","problem7(7,R),sudoku(R),maplist(label,R),!.","problem8(8,R),sudoku(R),maplist(label,R),!.","problem9(9,R),sudoku(R),maplist(label,R),!.","problem10(10,R),sudoku(R),maplist(label,R),!.","problem11(11,R),sudoku(R),maplist(label,R),!.","problem12(12,R),sudoku(R),maplist(label,R),!.","problem13(13,R),sudoku(R),maplist(label,R),!."};
         Query q = new Query("consult('test.pl')");

@@ -5,14 +5,16 @@
 package Vistas;
 
 /**
- *
- * @author kevin
+ * clase ventanaGane la cual se encarga de crear la ventana de gane
+ * @author  Kevin Lanzas, Jordi Segura
+ * @extend javax.swing.JFrame
  */
 public class ventanaGane extends javax.swing.JFrame {
 
-    /**
-     * Creates new form ventanaGane
-     */
+/**
+ * Metodo constructor de la ventana de gane el cual se encarga de inicializar todos los componentes necesarios para crear la ventana y poner tdos los datos en la ventana.
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     public ventanaGane() {
         initComponents();
         cantidadSug.setText("La cantidad de sugerencias utilizadas es: " + String.valueOf(ventanaJuego.estadisticaSugerencia));
@@ -20,6 +22,7 @@ public class ventanaGane extends javax.swing.JFrame {
         tipoFinalizado.setText("El tipo finalizado fue Exitoso");
         cantidadDigitos.setText("La cantidad de digitos insertados fue: " + String.valueOf(ventanaJuego.estadisticaDigitos));
         cantidadErrores.setText("La cantidad de errores verificados es " + String.valueOf(ventanaJuego.estadisticaErrores));
+        cronometro.setText("El tiempo jugado es: " + ventanaJuego.c.time);
     }
 
     /**
@@ -40,8 +43,10 @@ public class ventanaGane extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         botonAceptar = new javax.swing.JButton();
         cantidadErrores = new javax.swing.JLabel();
+        cronometro = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Estadisticas");
 
         jPanel2.setBackground(new java.awt.Color(102, 255, 102));
 
@@ -70,30 +75,34 @@ public class ventanaGane extends javax.swing.JFrame {
 
         cantidadErrores.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
 
+        cronometro.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(cantVerificaciones, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cantidadSug, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cantidadDigitos, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addGap(127, 127, 127)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(cantidadErrores, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
-                                .addComponent(tipoFinalizado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addGap(136, 136, 136)
-                            .addComponent(jLabel2))
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addGap(191, 191, 191)
-                            .addComponent(jLabel1))
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addGap(223, 223, 223)
-                            .addComponent(botonAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(cantVerificaciones, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cantidadSug, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cantidadDigitos, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(136, 136, 136)
+                                .addComponent(jLabel2))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(191, 191, 191)
+                                .addComponent(jLabel1))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(127, 127, 127)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(cantidadErrores, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
+                                    .addComponent(tipoFinalizado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(cronometro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(225, 225, 225)
+                        .addComponent(botonAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(112, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -114,8 +123,10 @@ public class ventanaGane extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(cantidadErrores, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cronometro, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                 .addComponent(botonAceptar)
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -131,14 +142,18 @@ public class ventanaGane extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+/**
+ * Metodo de accion de boton el cual se encarga de cerrar la ventana de gane
+ * @author Kevin Lanzas, Jordi Segura
+ */
     private void botonAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAceptarActionPerformed
         super.dispose();
     }//GEN-LAST:event_botonAceptarActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
+/**
+ * Metodo main de la ventana
+ * @author Kevin Lanzas, Jordi Segura, 
+ */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -177,6 +192,7 @@ public class ventanaGane extends javax.swing.JFrame {
     private javax.swing.JLabel cantidadDigitos;
     private javax.swing.JLabel cantidadErrores;
     private javax.swing.JLabel cantidadSug;
+    private javax.swing.JLabel cronometro;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel2;

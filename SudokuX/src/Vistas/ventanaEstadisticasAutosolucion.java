@@ -5,14 +5,16 @@
 package Vistas;
 
 /**
- *
- * @author kevin
+ * clase ventanaEstadisticasAutosolucion la cual se encarga de crear la ventana de estadisticas al autosolucionar el juego
+ * @author  Jordi Segura,Kevin Lanzas
+ * @extend javax.swing.JFrame
  */
 public class ventanaEstadisticasAutosolucion extends javax.swing.JFrame {
 
-    /**
-     * Creates new form ventanaEstadisticasAutosolucion
-     */
+/**
+ * Metodo constructor de la ventana de estadisticas de autosolucion el cual se encarga de inicializar todos los componentes necesarios para crear la ventana y poner tdos los datos en la ventana.
+ * @author  Jordi Segura, Kevin Lanzas
+ */
     public ventanaEstadisticasAutosolucion() {
         initComponents();
         cantidadSug.setText("La cantidad de sugerencias utilizadas es: " + String.valueOf(ventanaJuego.estadisticaSugerencia));
@@ -20,6 +22,7 @@ public class ventanaEstadisticasAutosolucion extends javax.swing.JFrame {
         tipoFinalizado.setText("El tipo finalizado fue por Autosolucion");
         cantidadDigitos.setText("La cantidad de digitos insertados fue: " + String.valueOf(ventanaJuego.estadisticaDigitos));
         cantidadErrores.setText("La cantidad de errores verificados es " + String.valueOf(ventanaJuego.estadisticaErrores));
+        tiempo.setText("El tiempo jugado es: " + ventanaJuego.c.time);
     }
 
     /**
@@ -41,8 +44,10 @@ public class ventanaEstadisticasAutosolucion extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         botonAceptar = new javax.swing.JButton();
         cantidadErrores = new javax.swing.JLabel();
+        tiempo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Estadisticas");
 
         jPanel2.setBackground(new java.awt.Color(102, 255, 102));
 
@@ -71,6 +76,8 @@ public class ventanaEstadisticasAutosolucion extends javax.swing.JFrame {
 
         cantidadErrores.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
 
+        tiempo.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -84,16 +91,17 @@ public class ventanaEstadisticasAutosolucion extends javax.swing.JFrame {
                         .addGap(96, 96, 96)
                         .addComponent(jLabel2))
                     .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(215, 215, 215)
+                        .addComponent(botonAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(127, 127, 127)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(cantidadErrores, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
                             .addComponent(tipoFinalizado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cantidadDigitos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cantidadSug, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cantVerificaciones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(215, 215, 215)
-                        .addComponent(botonAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(cantVerificaciones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(tiempo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap(87, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -113,7 +121,9 @@ public class ventanaEstadisticasAutosolucion extends javax.swing.JFrame {
                 .addComponent(tipoFinalizado, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(cantidadErrores, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tiempo, javax.swing.GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(botonAceptar)
                 .addGap(23, 23, 23))
         );
@@ -133,7 +143,7 @@ public class ventanaEstadisticasAutosolucion extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -142,14 +152,18 @@ public class ventanaEstadisticasAutosolucion extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+/**
+ * Metodo de accion de boton el cual se encarga de cerrar la ventana de estadisticas de autosolucion
+ * @author Jordi Segura, Kevin Lanzas
+ */
     private void botonAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAceptarActionPerformed
         super.dispose();
     }//GEN-LAST:event_botonAceptarActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
+/**
+ * Metodo main de la ventana
+ * @author Jordi Segura, Kevin Lanzas
+ */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -192,6 +206,7 @@ public class ventanaEstadisticasAutosolucion extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JLabel tiempo;
     private javax.swing.JLabel tipoFinalizado;
     // End of variables declaration//GEN-END:variables
 }

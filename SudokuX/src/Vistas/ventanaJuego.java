@@ -9,16 +9,18 @@ package sudokux;
 import java.util.List;
 import java.util.Map;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import org.jpl7.Query;
 import org.jpl7.Term;
+import sudokux.Cronometro;
 import sudokux.SudokuX;
 
 
 /**
- *
- * @author kevin
+ * clase ventanaJuego que se encarga de crear la ventana del juego.
+ * @author  Kevin Lanzas, Jordi Segura
+ * @extends javax.swing.JFrame
  */
-
 public class ventanaJuego extends javax.swing.JFrame {
     public static int estadisticaSugerencia;
     public static int estadisticaDigitos;
@@ -27,8 +29,9 @@ public class ventanaJuego extends javax.swing.JFrame {
     public static Map<String, Term>[] vacios;
     public static Map<String, Term>[] similitud;
     public static int errores;
+    public static Cronometro c;
     
-    public int contSugerencia = 0;
+    public int contSugerencia = 5;
     public int fila;
     public int columna;
     public JButton btnActual;
@@ -44,15 +47,23 @@ public class ventanaJuego extends javax.swing.JFrame {
                           {"0","0","0","0","0","0","0","0","0"},
                           {"0","0","0","0","0","0","0","0","0"}};
    
-    /**
-     * Creates new form ventanaJuego
-     */
+/**
+ * constructor ventanaJuego es el construtor donde se inicializan los componentes para la ventana de juego.
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     public ventanaJuego() {
         initComponents();
+        botonSugerencia.setText("Sugerencia (" + contSugerencia + ")");
         deshabilitarBotonesNum();
         generarTablero();
+        c = new Cronometro(cronometro);
+        c.start();
     }
-    
+ 
+/**
+ * Metodo deshabilitarBotonesNum la cual se encarga de deshabilitar los botones de numeros para insertar en el tablero.
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     public void deshabilitarBotonesNum(){
         botonNum1.setEnabled(false);
         botonNum2.setEnabled(false);
@@ -65,6 +76,10 @@ public class ventanaJuego extends javax.swing.JFrame {
         botonNum9.setEnabled(false);
     }
     
+/**
+ * Metodo habilitarBotonesNum la cual se encarga de habilitar los botones de numeros para insertar en el tablero
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     public void habilitarBotonesNum(){
         botonNum1.setEnabled(true);
         botonNum2.setEnabled(true);
@@ -76,6 +91,11 @@ public class ventanaJuego extends javax.swing.JFrame {
         botonNum8.setEnabled(true);
         botonNum9.setEnabled(true);
     }
+    
+ /**
+ * Metodo matrizAStr la cual se encarga de transformar una matriz a un String
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     public String matrizAStr(){
         String inicio = "[";
          for (int x=0; x < matriz.length; x++){
@@ -95,6 +115,10 @@ public class ventanaJuego extends javax.swing.JFrame {
         return inicio;   
     }
     
+ /**
+ * Metodo listAStr la cual se encarga de transformar una lista de listas de Strings en un String
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     public String listAStr(){
         String inicio = "[";
          for (int x=0; x < solucion.size(); x++){
@@ -125,6 +149,9 @@ public class ventanaJuego extends javax.swing.JFrame {
 
         jToggleButton1 = new javax.swing.JToggleButton();
         jLabel3 = new javax.swing.JLabel();
+        cantVerificaciones = new javax.swing.JLabel();
+        tipoFinalizado = new javax.swing.JLabel();
+        cantidadDigitos = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
@@ -227,12 +254,15 @@ public class ventanaJuego extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         botonSugerencia = new javax.swing.JButton();
         botonSolucion = new javax.swing.JButton();
-        cantVerificaciones = new javax.swing.JLabel();
-        cantidadSug = new javax.swing.JLabel();
-        cantidadDigitos = new javax.swing.JLabel();
-        tipoFinalizado = new javax.swing.JLabel();
+        cronometro = new javax.swing.JLabel();
 
         jToggleButton1.setText("jToggleButton1");
+
+        cantVerificaciones.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+
+        tipoFinalizado.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+
+        cantidadDigitos.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Sudoku X");
@@ -1046,13 +1076,7 @@ public class ventanaJuego extends javax.swing.JFrame {
             }
         });
 
-        cantVerificaciones.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-
-        cantidadSug.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-
-        cantidadDigitos.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-
-        tipoFinalizado.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        cronometro.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -1062,512 +1086,384 @@ public class ventanaJuego extends javax.swing.JFrame {
                 .addGap(10, 10, 10)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(160, 160, 160)
-                        .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(jButton11, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(jButton19, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(jButton20, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(jButton21, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(50, 50, 50)
+                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
                         .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(160, 160, 160)
-                        .addComponent(jButton15, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(160, 160, 160)
-                        .addComponent(jButton16, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(50, 50, 50)
-                        .addComponent(jButton18, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(50, 50, 50)
-                        .addComponent(jButton29, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(220, 220, 220)
-                        .addComponent(jButton46, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton31, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(110, 110, 110)
-                        .addComponent(jButton40, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(100, 100, 100)
-                        .addComponent(jButton36, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(60, 60, 60)
-                        .addComponent(jButton44, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(100, 100, 100)
-                        .addComponent(jButton57, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(60, 60, 60)
-                        .addComponent(jButton65, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(260, 260, 260)
-                        .addComponent(jButton69, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(160, 160, 160)
-                        .addComponent(jButton70, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(50, 50, 50)
-                        .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton28, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(100, 100, 100)
-                        .addComponent(jButton33, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(210, 210, 210)
-                        .addComponent(jButton41, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(420, 420, 420)
+                        .addGap(0, 0, 0)
+                        .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(jButton13, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(jButton14, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(jButton15, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(jButton22, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(jButton23, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
                         .addComponent(jButton24, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(370, 370, 370)
-                        .addComponent(jButton23, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(100, 100, 100)
-                        .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton55, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(jButton16, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(jButton17, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(60, 60, 60)
+                        .addComponent(jButton25, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(jButton26, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(jButton27, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(160, 160, 160)
-                        .addComponent(jButton13, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jSeparator9, javax.swing.GroupLayout.PREFERRED_SIZE, 470, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButton37, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(320, 320, 320)
+                        .addComponent(jButton46, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(260, 260, 260)
                         .addComponent(jButton39, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(320, 320, 320)
-                        .addComponent(jButton52, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(320, 320, 320)
-                        .addComponent(jButton79, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(210, 210, 210)
-                        .addComponent(jButton14, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(210, 210, 210)
-                        .addComponent(jButton17, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(370, 370, 370)
-                        .addComponent(jButton74, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(100, 100, 100)
-                        .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(50, 50, 50)
-                        .addComponent(jButton62, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(420, 420, 420)
-                        .addComponent(jButton21, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(370, 370, 370)
-                        .addComponent(jButton77, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(370, 370, 370)
-                        .addComponent(jButton20, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(50, 50, 50)
-                        .addComponent(jButton35, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(320, 320, 320)
-                        .addComponent(jButton76, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(370, 370, 370)
-                        .addComponent(jButton80, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(100, 100, 100)
-                        .addComponent(jButton60, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(50, 50, 50)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(210, 210, 210)
-                        .addComponent(jButton11, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(320, 320, 320)
-                        .addComponent(jButton19, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(160, 160, 160)
-                        .addComponent(jButton37, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton34, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(370, 370, 370)
-                        .addComponent(jButton47, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(420, 420, 420)
-                        .addComponent(jButton48, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(100, 100, 100)
-                        .addComponent(jButton63, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(420, 420, 420)
-                        .addComponent(jButton51, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton58, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(370, 370, 370)
-                        .addComponent(jButton26, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(260, 260, 260)
-                        .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(420, 420, 420)
-                        .addComponent(jButton75, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(370, 370, 370)
-                        .addComponent(jButton53, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(50, 50, 50)
-                        .addComponent(jButton59, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButton30, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton28, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jSeparator9, javax.swing.GroupLayout.PREFERRED_SIZE, 470, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(210, 210, 210)
                         .addComponent(jButton38, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(260, 260, 260)
-                        .addComponent(jButton45, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jButton31, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(jButton32, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(jButton33, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(jButton40, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(jButton41, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(110, 110, 110)
+                        .addComponent(jButton50, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(100, 100, 100)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jButton34, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(jButton35, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(jButton36, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(jButton43, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(jButton44, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(60, 60, 60)
+                        .addComponent(jButton52, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(50, 50, 50)
+                        .addComponent(jButton54, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jSeparator6, javax.swing.GroupLayout.PREFERRED_SIZE, 470, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(320, 320, 320)
-                        .addComponent(jButton22, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jButton55, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(50, 50, 50)
+                        .addComponent(jButton57, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(60, 60, 60)
+                        .addComponent(jButton65, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(jButton66, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(jButton73, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(jButton74, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(jButton75, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(420, 420, 420)
+                        .addGap(50, 50, 50)
+                        .addComponent(jButton59, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(jButton60, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(jButton67, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(jButton68, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(jButton69, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(jButton76, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(jButton77, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
                         .addComponent(jButton78, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(160, 160, 160)
-                        .addComponent(jButton67, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(50, 50, 50)
-                        .addComponent(jButton32, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jSeparator6, javax.swing.GroupLayout.PREFERRED_SIZE, 470, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(100, 100, 100)
-                        .addComponent(jButton30, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(210, 210, 210)
-                        .addComponent(jButton71, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(160, 160, 160)
-                        .addComponent(jButton64, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(370, 370, 370)
-                        .addComponent(jButton50, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(260, 260, 260)
-                        .addComponent(jButton72, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(320, 320, 320)
-                        .addComponent(jButton73, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(420, 420, 420)
-                        .addComponent(jButton81, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(420, 420, 420)
-                        .addComponent(jButton27, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(260, 260, 260)
-                        .addComponent(jButton42, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(420, 420, 420)
-                        .addComponent(jButton54, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jButton70, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(jButton71, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(jButton72, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(jButton79, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(jButton80, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(320, 320, 320)
                         .addComponent(jButton49, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(370, 370, 370)
+                        .addComponent(jButton53, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(100, 100, 100)
+                        .addComponent(jButton63, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(50, 50, 50)
                         .addComponent(jButton56, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(310, 310, 310)
+                        .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(160, 160, 160)
-                        .addComponent(jButton43, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton61, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(320, 320, 320)
-                        .addComponent(jButton25, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(210, 210, 210)
-                        .addComponent(jButton68, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(260, 260, 260)
-                        .addComponent(jButton66, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jButton64, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(153, 153, 153)
                         .addComponent(jSeparator7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(310, 310, 310)
-                        .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(40, 40, 40)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(50, 50, 50)
-                                .addComponent(botonNum1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(10, 10, 10)
-                                .addComponent(botonNum2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(10, 10, 10)
-                                .addComponent(botonNum3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(50, 50, 50)
-                                .addComponent(botonNum4, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(10, 10, 10)
-                                .addComponent(botonNum5, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(10, 10, 10)
-                                .addComponent(botonNum6, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(50, 50, 50)
-                                .addComponent(botonNum7, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(10, 10, 10)
-                                .addComponent(botonNum9, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(10, 10, 10)
-                                .addComponent(botonNum8, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(50, 50, 50)
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(botonGenerarJuegoNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(10, 10, 10)
-                                .addComponent(botonVerificar, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(80, 80, 80)
-                                .addComponent(botonSugerencia, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(20, 20, 20)
-                                .addComponent(botonReiniciarJuego, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(10, 10, 10)
-                                .addComponent(botonSolucion, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(cantVerificaciones, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
-                                    .addComponent(cantidadSug, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(cantidadDigitos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(tipoFinalizado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(botonSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton15, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton16, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton18, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(10, 10, 10)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton29, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton46, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton31, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton40, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton36, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton44, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(10, 10, 10)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton57, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton65, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(jButton69, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
-                        .addComponent(jButton70, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(100, 100, 100)
-                        .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(160, 160, 160)
-                        .addComponent(jButton28, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(210, 210, 210)
-                        .addComponent(jButton33, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(210, 210, 210)
-                        .addComponent(jButton41, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(50, 50, 50)
-                        .addComponent(jButton24, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(50, 50, 50)
-                        .addComponent(jButton23, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(100, 100, 100)
-                        .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(320, 320, 320)
-                        .addComponent(jButton55, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(50, 50, 50)
-                        .addComponent(jButton13, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(151, 151, 151)
-                        .addComponent(jSeparator9, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(160, 160, 160)
-                        .addComponent(jButton39, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(260, 260, 260)
-                        .addComponent(jButton52, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(420, 420, 420)
-                        .addComponent(jButton79, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(50, 50, 50)
-                        .addComponent(jButton14, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(100, 100, 100)
-                        .addComponent(jButton17, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(320, 320, 320)
-                        .addComponent(jButton74, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(50, 50, 50)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(50, 50, 50)
-                        .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addComponent(jSeparator7, javax.swing.GroupLayout.PREFERRED_SIZE, 479, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(420, 420, 420)
-                        .addComponent(jButton62, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton21, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(370, 370, 370)
-                        .addComponent(jButton77, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton20, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(260, 260, 260)
-                        .addComponent(jButton35, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(370, 370, 370)
-                        .addComponent(jButton76, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(420, 420, 420)
-                        .addComponent(jButton80, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(370, 370, 370)
-                        .addComponent(jButton60, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton11, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton19, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(160, 160, 160)
-                        .addComponent(jButton37, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(260, 260, 260)
-                        .addComponent(jButton34, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(160, 160, 160)
                         .addComponent(jButton47, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(160, 160, 160)
-                        .addComponent(jButton48, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(420, 420, 420)
-                        .addComponent(jButton63, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(210, 210, 210)
-                        .addComponent(jButton51, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(370, 370, 370)
-                        .addComponent(jButton58, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(100, 100, 100)
-                        .addComponent(jButton26, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(320, 320, 320)
-                        .addComponent(jButton75, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton58, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(260, 260, 260)
-                        .addComponent(jButton53, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(370, 370, 370)
-                        .addComponent(jButton59, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(100, 100, 100)
-                        .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(160, 160, 160)
-                        .addComponent(jButton38, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(260, 260, 260)
-                        .addComponent(jButton45, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(50, 50, 50)
-                        .addComponent(jButton22, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(370, 370, 370)
-                        .addComponent(jButton67, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(210, 210, 210)
-                        .addComponent(jButton32, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(310, 310, 310)
-                        .addComponent(jSeparator6, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(160, 160, 160)
-                        .addComponent(jButton30, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(420, 420, 420)
-                        .addComponent(jButton71, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(320, 320, 320)
-                        .addComponent(jButton64, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(210, 210, 210)
-                        .addComponent(jButton50, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(420, 420, 420)
-                        .addComponent(jButton72, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(320, 320, 320)
-                        .addComponent(jButton73, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jButton42, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(420, 420, 420)
                         .addComponent(jButton81, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(100, 100, 100)
-                        .addComponent(jButton27, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(210, 210, 210)
-                        .addComponent(jButton42, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(50, 50, 50)
+                        .addComponent(jButton62, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(260, 260, 260)
-                        .addComponent(jButton54, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(210, 210, 210)
-                        .addComponent(jButton49, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(320, 320, 320)
-                        .addComponent(jButton56, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jButton45, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(260, 260, 260)
-                        .addComponent(jButton43, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jButton18, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton61, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(420, 420, 420)
-                        .addComponent(jButton61, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jButton48, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(100, 100, 100)
-                        .addComponent(jButton25, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(420, 420, 420)
+                        .addComponent(jButton51, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(370, 370, 370)
-                        .addComponent(jButton68, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(50, 50, 50)
+                        .addComponent(jButton29, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(10, 10, 10)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(320, 320, 320)
-                        .addComponent(jButton66, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(30, 30, 30)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 479, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(40, 40, 40)
+                        .addComponent(botonNum1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(botonNum2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(botonNum3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
+                        .addGap(40, 40, 40)
+                        .addComponent(botonNum4, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(botonNum5, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(botonNum6, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(40, 40, 40)
+                        .addComponent(botonNum7, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(botonNum9, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(botonNum8, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(40, 40, 40)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(8, 8, 8)
+                        .addComponent(botonGenerarJuegoNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(botonVerificar, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(botonReiniciarJuego, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(botonSolucion, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(178, 178, 178)
+                        .addComponent(botonSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(botonSugerencia, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cronometro, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(19, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton11, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton19, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton20, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton21, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton13, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton14, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton15, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton22, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton23, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton24, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton16, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton17, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton25, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton26, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton27, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(1, 1, 1)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jSeparator9, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(9, 9, 9)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jButton37, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jButton46, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jButton39, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jButton30, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jButton28, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jButton38, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButton31, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton32, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton33, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton40, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton41, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton50, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButton34, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton35, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton36, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton43, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton44, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton52, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton54, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jSeparator6, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButton55, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton57, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton65, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton66, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton73, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton74, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton75, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButton59, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton60, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton67, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton68, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton69, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton76, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton77, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton78, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButton70, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton71, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton72, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton79, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton80, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(210, 210, 210)
+                                .addComponent(jButton49, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(260, 260, 260)
+                                .addComponent(jButton53, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(420, 420, 420)
+                                .addComponent(jButton63, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(320, 320, 320)
+                                .addComponent(jButton56, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(1, 1, 1)
+                                .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 479, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(320, 320, 320)
+                                .addComponent(jButton64, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(1, 1, 1)
+                                .addComponent(jSeparator7, javax.swing.GroupLayout.PREFERRED_SIZE, 479, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(160, 160, 160)
+                                .addComponent(jButton47, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(370, 370, 370)
+                                .addComponent(jButton58, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(210, 210, 210)
+                                .addComponent(jButton42, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(420, 420, 420)
+                                .addComponent(jButton81, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(420, 420, 420)
+                                .addComponent(jButton62, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(260, 260, 260)
+                                .addComponent(jButton45, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(100, 100, 100)
+                                .addComponent(jButton18, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(420, 420, 420)
+                                .addComponent(jButton61, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(160, 160, 160)
+                                .addComponent(jButton48, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(210, 210, 210)
+                                .addComponent(jButton51, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(160, 160, 160)
+                                .addComponent(jButton29, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(26, 26, 26)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1594,27 +1490,21 @@ public class ventanaJuego extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(botonReiniciarJuego)
                             .addComponent(botonSolucion))
-                        .addGap(19, 19, 19)
+                        .addGap(18, 18, 18)
                         .addComponent(botonSugerencia, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(7, 7, 7)
-                        .addComponent(cantVerificaciones, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(cantidadSug, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(cantidadDigitos, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jButton78, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(tipoFinalizado, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addGap(41, 41, 41)
+                        .addComponent(cronometro, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(64, 64, 64)
                         .addComponent(botonSalir)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+/**
+ * Metodo de boton que se encarga de poner el numero seleccionado en el espacio indicado en el tablero
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void botonNum6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonNum6ActionPerformed
         btnActual.setText("6");
         estadisticaDigitos++;
@@ -1629,14 +1519,20 @@ public class ventanaJuego extends javax.swing.JFrame {
         ventanaInicio.setLocationRelativeTo(null);
         ventanaInicio.setVisible(true);
     }//GEN-LAST:event_botonSalirActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         btnActual = jButton2;
         fila = 0;
         columna = 1;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton2ActionPerformed
-
+/**
+ * Metodo de boton que se encarga de poner el numero seleccionado en el espacio indicado en el tablero
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void botonNum1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonNum1ActionPerformed
         btnActual.setText("1");
         estadisticaDigitos++;
@@ -1644,7 +1540,10 @@ public class ventanaJuego extends javax.swing.JFrame {
         matriz[fila][columna] = "1";
         deshabilitarBotonesNum();
     }//GEN-LAST:event_botonNum1ActionPerformed
-
+/**
+ * Metodo de boton que se encarga de poner el numero seleccionado en el espacio indicado en el tablero
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void botonNum2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonNum2ActionPerformed
         btnActual.setText("2");
         estadisticaDigitos++;
@@ -1652,7 +1551,10 @@ public class ventanaJuego extends javax.swing.JFrame {
         matriz[fila][columna] = "2";
         deshabilitarBotonesNum();
     }//GEN-LAST:event_botonNum2ActionPerformed
-
+/**
+ * Metodo de boton que se encarga de poner el numero seleccionado en el espacio indicado en el tablero
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void botonNum3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonNum3ActionPerformed
         btnActual.setText("3");
         estadisticaDigitos++;
@@ -1660,7 +1562,10 @@ public class ventanaJuego extends javax.swing.JFrame {
         matriz[fila][columna] = "3";
         deshabilitarBotonesNum();
     }//GEN-LAST:event_botonNum3ActionPerformed
-
+/**
+ * Metodo de boton que se encarga de poner el numero seleccionado en el espacio indicado en el tablero
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void botonNum4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonNum4ActionPerformed
         btnActual.setText("4");
         estadisticaDigitos++;
@@ -1668,7 +1573,10 @@ public class ventanaJuego extends javax.swing.JFrame {
         matriz[fila][columna] = "4";
         deshabilitarBotonesNum();
     }//GEN-LAST:event_botonNum4ActionPerformed
-
+/**
+ * Metodo de boton que se encarga de poner el numero seleccionado en el espacio indicado en el tablero
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void botonNum5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonNum5ActionPerformed
         btnActual.setText("5");
         estadisticaDigitos++;
@@ -1676,7 +1584,10 @@ public class ventanaJuego extends javax.swing.JFrame {
         matriz[fila][columna] = "5";
         deshabilitarBotonesNum();
     }//GEN-LAST:event_botonNum5ActionPerformed
-
+/**
+ * Metodo de boton que se encarga de poner el numero seleccionado en el espacio indicado en el tablero
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void botonNum7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonNum7ActionPerformed
         btnActual.setText("7");
         estadisticaDigitos++;
@@ -1684,7 +1595,10 @@ public class ventanaJuego extends javax.swing.JFrame {
         matriz[fila][columna] = "7";
         deshabilitarBotonesNum();
     }//GEN-LAST:event_botonNum7ActionPerformed
-
+/**
+ * Metodo de boton que se encarga de poner el numero seleccionado en el espacio indicado en el tablero
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void botonNum8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonNum8ActionPerformed
         btnActual.setText("8");
         estadisticaDigitos++;
@@ -1692,7 +1606,10 @@ public class ventanaJuego extends javax.swing.JFrame {
         matriz[fila][columna] = "8";
         deshabilitarBotonesNum();
     }//GEN-LAST:event_botonNum8ActionPerformed
-
+/**
+ * Metodo de boton que se encarga de poner el numero seleccionado en el espacio indicado en el tablero
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void botonNum9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonNum9ActionPerformed
         btnActual.setText("9");
         estadisticaDigitos++;
@@ -1700,560 +1617,800 @@ public class ventanaJuego extends javax.swing.JFrame {
         matriz[fila][columna] = "9";
         deshabilitarBotonesNum();
     }//GEN-LAST:event_botonNum9ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         btnActual = jButton3;
         fila = 0;
         columna = 2;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton3ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
        btnActual = jButton4;
        fila = 1;
        columna = 0;
        habilitarBotonesNum();
     }//GEN-LAST:event_jButton4ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         btnActual = jButton5;
         fila = 1;
         columna = 1;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton5ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         btnActual = jButton6;
         fila = 1;
         columna = 2;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton6ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
        btnActual = jButton7;
        fila = 2;
        columna = 0;
        habilitarBotonesNum();
     }//GEN-LAST:event_jButton7ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
         btnActual = jButton8;
         fila = 2;
         columna = 1;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton8ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
         btnActual = jButton9;
         fila = 2;
         columna = 2;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton9ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
         btnActual = jButton10;
         fila = 0;
         columna = 3;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton10ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton19ActionPerformed
         btnActual = jButton19;
         fila = 0;
         columna = 6;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton19ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
         btnActual = jButton12;
         fila = 0;
         columna = 5;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton12ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
         btnActual = jButton13;
         fila = 1;
         columna = 3;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton13ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
         btnActual = jButton14;
         fila = 1;
         columna = 4;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton14ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton15ActionPerformed
         btnActual = jButton15;
         fila = 1;
         columna = 5;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton15ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton16ActionPerformed
         btnActual = jButton16;
         fila = 2;
         columna = 3;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton16ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton17ActionPerformed
         btnActual = jButton17;
         fila = 2;
         columna = 4;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton17ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton18ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton18ActionPerformed
         btnActual = jButton18;
         fila = 2;
         columna = 5;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton18ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         btnActual = jButton1;
         fila = 0;
         columna = 0;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton1ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton20ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton20ActionPerformed
         btnActual = jButton20;
         fila = 0;
         columna = 7;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton20ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton22ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton22ActionPerformed
         btnActual = jButton22;
         fila = 1;
         columna = 6;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton22ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton23ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton23ActionPerformed
         btnActual = jButton23;
         fila = 1;
         columna = 7;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton23ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton24ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton24ActionPerformed
         btnActual = jButton24;
         fila = 1;
         columna = 8;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton24ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton25ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton25ActionPerformed
         btnActual = jButton25;
         fila = 2;
         columna = 6;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton25ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton26ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton26ActionPerformed
         btnActual = jButton26;
         fila = 2;
         columna = 7;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton26ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton27ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton27ActionPerformed
         btnActual = jButton27;
         fila = 2;
         columna = 8;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton27ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton28ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton28ActionPerformed
         btnActual = jButton28;
         fila = 3;
         columna = 0;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton28ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton37ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton37ActionPerformed
         btnActual = jButton37;
         fila = 3;
         columna = 3;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton37ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton30ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton30ActionPerformed
         btnActual = jButton30;
         fila = 3;
         columna = 2;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton30ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton31ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton31ActionPerformed
         btnActual = jButton31;
         fila = 4;
         columna = 0;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton31ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton32ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton32ActionPerformed
         btnActual = jButton32;
         fila = 4;
         columna = 1;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton32ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton33ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton33ActionPerformed
         btnActual = jButton33;
         fila = 4;
         columna = 2;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton33ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton34ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton34ActionPerformed
         btnActual = jButton34;
         fila = 5;
         columna = 0;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton34ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton35ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton35ActionPerformed
        btnActual = jButton35;
        fila = 5;
        columna = 1;
        habilitarBotonesNum();
     }//GEN-LAST:event_jButton35ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton36ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton36ActionPerformed
         btnActual = jButton36;
         fila = 5;
         columna = 2;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton36ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
         btnActual = jButton11;
         fila = 0;
         columna = 4;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton11ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton38ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton38ActionPerformed
         btnActual = jButton38;
         fila = 3;
         columna = 4;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton38ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton39ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton39ActionPerformed
         btnActual = jButton39;
         fila = 3;
         columna = 5;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton39ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton40ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton40ActionPerformed
         btnActual = jButton40;
         fila = 4;
         columna = 3;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton40ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton41ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton41ActionPerformed
         btnActual = jButton41;
         fila = 4;
         columna = 4;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton41ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton42ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton42ActionPerformed
         btnActual = jButton42;
         fila = 4;
         columna = 5;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton42ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton43ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton43ActionPerformed
         btnActual = jButton43;
         fila = 5;
         columna = 3;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton43ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton44ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton44ActionPerformed
         btnActual = jButton44;
         fila = 5;
         columna = 4;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton44ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton45ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton45ActionPerformed
         btnActual = jButton45;
         fila = 5;
         columna = 5;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton45ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton46ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton46ActionPerformed
         btnActual = jButton46;
         fila = 3;
         columna = 6;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton46ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton47ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton47ActionPerformed
         btnActual = jButton47;
         fila = 3;
         columna = 7;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton47ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton48ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton48ActionPerformed
         btnActual = jButton48;
         fila = 3;
         columna = 8;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton48ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton49ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton49ActionPerformed
         btnActual = jButton49;
         fila = 4;
         columna = 6;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton49ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton50ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton50ActionPerformed
         btnActual = jButton50;
         fila = 4;
         columna = 7;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton50ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton51ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton51ActionPerformed
         btnActual = jButton51;
         fila = 4;
         columna = 8;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton51ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton52ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton52ActionPerformed
         btnActual = jButton52;
         fila = 5;
         columna = 6;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton52ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton53ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton53ActionPerformed
         btnActual = jButton53;
         fila = 5;
         columna = 7;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton53ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton54ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton54ActionPerformed
         btnActual = jButton54;
         fila = 5;
         columna = 8;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton54ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton55ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton55ActionPerformed
         btnActual = jButton55;
         fila = 6;
         columna = 0;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton55ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton56ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton56ActionPerformed
         btnActual = jButton56;
         fila = 6;
         columna = 1;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton56ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton57ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton57ActionPerformed
         btnActual = jButton57;
         fila = 6;
         columna = 2;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton57ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton58ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton58ActionPerformed
         btnActual = jButton58;
         fila = 7;
         columna = 0;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton58ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton59ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton59ActionPerformed
         btnActual = jButton59;
         fila = 7;
         columna = 1;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton59ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton60ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton60ActionPerformed
         btnActual = jButton60;
         fila = 7;
         columna = 2;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton60ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton61ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton61ActionPerformed
         btnActual = jButton61;
         fila = 8;
         columna = 0;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton61ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton62ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton62ActionPerformed
         btnActual = jButton62;
         fila = 8;
         columna = 1;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton62ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton63ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton63ActionPerformed
         btnActual = jButton63;
         fila = 8;
         columna = 2;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton63ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton64ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton64ActionPerformed
         btnActual = jButton64;
         fila = 6;
         columna = 3;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton64ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton65ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton65ActionPerformed
         btnActual = jButton65;
         fila = 6;
         columna = 4;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton65ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton66ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton66ActionPerformed
         btnActual = jButton66;
         fila = 6;
         columna = 5;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton66ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton67ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton67ActionPerformed
         btnActual = jButton67;
         fila = 7;
         columna = 3;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton67ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton68ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton68ActionPerformed
         btnActual = jButton68;
         fila = 7;
         columna = 4;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton68ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton69ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton69ActionPerformed
         btnActual = jButton69;
         fila = 7;
         columna = 5;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton69ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton70ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton70ActionPerformed
         btnActual = jButton70;
         fila = 8;
         columna = 3;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton70ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton71ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton71ActionPerformed
         btnActual = jButton71;
         fila = 8;
         columna = 4;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton71ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton72ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton72ActionPerformed
         btnActual = jButton72;
         fila = 8;
         columna = 5;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton72ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton73ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton73ActionPerformed
         btnActual = jButton73;
         fila = 6;
         columna = 6;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton73ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton74ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton74ActionPerformed
         btnActual = jButton74;
         fila = 6;
         columna = 7;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton74ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton75ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton75ActionPerformed
         btnActual = jButton75;
         fila = 6;
         columna = 8;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton75ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton76ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton76ActionPerformed
         btnActual = jButton76;
         fila = 7;
         columna = 6;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton76ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton77ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton77ActionPerformed
         btnActual = jButton77;
         fila = 7;
         columna = 7;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton77ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton78ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton78ActionPerformed
         btnActual = jButton78;
         fila = 7;
         columna = 8;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton78ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton79ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton79ActionPerformed
         btnActual = jButton79;
         fila = 8;
         columna = 6;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton79ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton81ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton81ActionPerformed
         btnActual = jButton81;
         fila = 8;
         columna = 8;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton81ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton80ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton80ActionPerformed
         btnActual = jButton80;
         fila = 8;
         columna = 7;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton80ActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton29ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton29ActionPerformed
         btnActual = jButton29;
         fila = 3;
         columna = 1;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton29ActionPerformed
-
+/**
+ * Metodo de accion del boton verificar la cual se encarga de verificar el estado en el que se encuentra el tablero
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void botonVerificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonVerificarActionPerformed
         String matrizJuego = matrizAStr();
         String matrizSolucion = listAStr();
@@ -2265,7 +2422,7 @@ public class ventanaJuego extends javax.swing.JFrame {
         q = new Query(coneccion);
         Map<String, Term>[] res = q.allSolutions();
         vacios = res;
-        
+       
         Query q2 = new Query("consult('test.pl')");
         q2.hasSolution();
         q2 = new Query(coneccion2);
@@ -2273,11 +2430,15 @@ public class ventanaJuego extends javax.swing.JFrame {
         similitud = res2;
         
         if(Integer.parseInt("" + String.valueOf(similitud[0]).charAt(3) + String.valueOf(similitud[0]).charAt(4)) == 81){
+            c.suspend();
             ventanaGane vGanada = new ventanaGane();
             vGanada.setLocationRelativeTo(null);
             vGanada.setVisible(true);
+            botonVerificar.setEnabled(false);
+            botonSugerencia.setEnabled(false);
+            botonSolucion.setEnabled(false);
         }else{
-            errores = 81 - Integer.parseInt("" + String.valueOf(similitud[0]).charAt(3) + String.valueOf(similitud[0]).charAt(4));
+            errores = 81 - Integer.parseInt("" + String.valueOf(similitud[0]).charAt(3) + String.valueOf(similitud[0]).charAt(4)) - Integer.parseInt("" + String.valueOf(vacios[0]).charAt(3) + String.valueOf(vacios[0]).charAt(4));
             estadisticaErrores = estadisticaErrores + errores;
             ventanaVerificacion vVerificacion = new ventanaVerificacion();
             vVerificacion.setLocationRelativeTo(null);
@@ -2296,7 +2457,10 @@ public class ventanaJuego extends javax.swing.JFrame {
         System.out.println(estadisticasVerificar);
         System.out.println(estadisticaSugerencia);
     }//GEN-LAST:event_botonVerificarActionPerformed
-
+/**
+ * Metodo generarTablero la cual se encarga de generar el tablero con las pistas iniciales
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     public void generarTablero(){
         for (int x=0; x < pistas.size(); x++) {
             for (int y=0; y < pistas.get(x).length; y++) {
@@ -2629,6 +2793,10 @@ public class ventanaJuego extends javax.swing.JFrame {
             }
         }
     }
+/**
+ * Metodo de accion del boton reiniciar el cual se encarga de reiniciar el mismo juego en su estado inicial
+ * @author Jordi Segura, Kevin Lanzas
+ */
     private void botonReiniciarJuegoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonReiniciarJuegoActionPerformed
         estadisticaSugerencia = 0;
         estadisticaDigitos = 0;
@@ -2639,46 +2807,399 @@ public class ventanaJuego extends javax.swing.JFrame {
         juegoNuevo.setVisible(true);
         juegoNuevo.setLocationRelativeTo(null);
     }//GEN-LAST:event_botonReiniciarJuegoActionPerformed
-
+/**
+ * Metodo de accion del boton generarJuegoNuevo la cual se encarga de generar otro juego.
+ * @author Jordi Segura, Kevin Lanzas
+ */
     private void botonGenerarJuegoNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonGenerarJuegoNuevoActionPerformed
-
-        pistas = SudokuX.matrizPistas();
-        solucion = SudokuX.matrizSudoku();
-        generarTablero();
-        ventanaJuego tablero = new ventanaJuego();
-        super.setVisible(false);
-        tablero.setVisible(true);
-        tablero.setLocationRelativeTo(null);
+        super.dispose();
         ventanaEstadisticas vEstadisticas = new ventanaEstadisticas();
         vEstadisticas.setLocationRelativeTo(null);
         vEstadisticas.setVisible(true);
-        estadisticaSugerencia = 0;
-        estadisticaDigitos = 0;
-        estadisticasVerificar =0;
-        estadisticaErrores = 0;
-
+     
     }//GEN-LAST:event_botonGenerarJuegoNuevoActionPerformed
-
+/**
+ * Metodo de accion del boton sugerencia el cual se encarga de poner una sugerencia aleatoriamente en el tablero
+ * @author Jordi Segura, Kevin Lanzas
+ */
     private void botonSugerenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonSugerenciaActionPerformed
-        estadisticaSugerencia++;
-        contSugerencia++;
-        if (contSugerencia == 5){
+         if (contSugerencia == 0){
             botonSugerencia.setEnabled(false);
             ventanaErrorSugerencia vError = new ventanaErrorSugerencia();
             vError.setLocationRelativeTo(null);
             vError.setVisible(true);
-        }
+        }else{
+            boolean bandera = true;
+            String matrizJuego = matrizAStr();
+            String matrizSolucion = listAStr();
+            String coneccion2 = "similitudMatrices(" + matrizJuego + "," + matrizSolucion + ",R)";
+            Query q2 = new Query("consult('test.pl')");
+            q2.hasSolution();
+            q2 = new Query(coneccion2);
+            Map<String, Term>[] res2 = q2.allSolutions();
+            similitud = res2;
+            errores = 81 - Integer.parseInt("" + String.valueOf(similitud[0]).charAt(3) + String.valueOf(similitud[0]).charAt(4));
+            if(errores == 0){
+                JOptionPane.showMessageDialog(null, "No se puede realizar mas sugerencias porque el juego ya esta solucionado", "Error", JOptionPane.WARNING_MESSAGE);
+            }else{
+                while (bandera){
+                    Query q = new Query("consult('test.pl')");
+                    q.hasSolution();
+                    q = new Query("randomSugerencia(R)");
+                    Map<String, Term>[] res = q.allSolutions();
+                    int x = Integer.parseInt("" + String.valueOf(res[0]).charAt(4))-1;
+                    int i = Integer.parseInt("" + String.valueOf(res[0]).charAt(7))-1;
+                    if(matriz[x][i] != solucion.get(x)[i]){
+                        if (x == 0 && i == 0){
+                            jButton1.setText(solucion.get(x)[i]);
+                            jButton1.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x == 0 && i == 1){
+                            jButton2.setText(solucion.get(x)[i]);
+                            jButton2.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==0 && i == 2){
+                            jButton3.setText(solucion.get(x)[i]);
+                            jButton3.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==0 && i == 3){
+                            jButton10.setText(solucion.get(x)[i]);
+                            jButton10.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==0 && i == 4){
+                            jButton11.setText(solucion.get(x)[i]);
+                            jButton11.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==0 && i == 5){
+                            jButton12.setText(solucion.get(x)[i]);
+                            jButton12.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==0 && i == 6){
+                            jButton19.setText(solucion.get(x)[i]);
+                            jButton19.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==0 && i == 7){
+                            jButton20.setText(solucion.get(x)[i]);
+                            jButton20.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==0 && i== 8){
+                            jButton21.setText(solucion.get(x)[i]);
+                            jButton21.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==1 && i == 0){
+                            jButton4.setText(solucion.get(x)[i]);
+                            jButton4.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==1 && i == 1 ){
+                            jButton5.setText(solucion.get(x)[i]);
+                            jButton5.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==1 && i == 2){
+                            jButton6.setText(solucion.get(x)[i]);
+                            jButton6.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==1 && i == 3){
+                            jButton13.setText(solucion.get(x)[i]);
+                            jButton13.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==1 && i == 4){
+                            jButton14.setText(solucion.get(x)[i]);
+                            jButton14.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==1 && i == 5){
+                            jButton15.setText(solucion.get(x)[i]);
+                            jButton15.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==1 && i == 6){
+                            jButton22.setText(solucion.get(x)[i]);
+                            jButton22.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==1 && i == 7){
+                            jButton23.setText(solucion.get(x)[i]);
+                            jButton23.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==1 && i == 8){
+                            jButton24.setText(solucion.get(x)[i]);
+                            jButton24.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==2 && i == 0){
+                            jButton7.setText(solucion.get(x)[i]);
+                            jButton7.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==2 && i == 1){
+                            jButton8.setText(solucion.get(x)[i]);
+                            jButton8.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==2 && i == 2){
+                            jButton9.setText(solucion.get(x)[i]);
+                            jButton9.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==2 && i == 3){
+                            jButton16.setText(solucion.get(x)[i]);
+                            jButton16.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==2 && i == 4){
+                            jButton17.setText(solucion.get(x)[i]);
+                            jButton17.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==2 && i == 5){
+                            jButton18.setText(solucion.get(x)[i]);
+                            jButton18.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==2 && i == 6){
+                            jButton25.setText(solucion.get(x)[i]);
+                            jButton25.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==2 && i == 7){
+                            jButton26.setText(solucion.get(x)[i]);
+                            jButton26.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==2 && i == 8){
+                            jButton27.setText(solucion.get(x)[i]);
+                            jButton27.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==3 && i == 0){
+                            jButton28.setText(solucion.get(x)[i]);
+                            jButton28.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==3 && i == 1){
+                            jButton29.setText(solucion.get(x)[i]);
+                            jButton29.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==3 && i == 2){
+                            jButton30.setText(solucion.get(x)[i]);
+                            jButton30.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==3 && i == 3){
+                            jButton37.setText(solucion.get(x)[i]);
+                            jButton37.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==3 && i == 4){
+                            jButton38.setText(solucion.get(x)[i]);
+                            jButton38.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==3 && i == 5){
+                            jButton39.setText(solucion.get(x)[i]);
+                            jButton39.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==3 && i == 6){
+                            jButton46.setText(solucion.get(x)[i]);
+                            jButton46.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==3 && i == 7){
+                            jButton47.setText(solucion.get(x)[i]);
+                            jButton47.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==3 && i == 8){
+                            jButton48.setText(solucion.get(x)[i]);
+                            jButton48.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==4 && i == 0){
+                            jButton31.setText(solucion.get(x)[i]);
+                            jButton31.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==4 && i == 1){
+                            jButton32.setText(solucion.get(x)[i]);
+                            jButton32.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==4 && i == 2){
+                            jButton33.setText(solucion.get(x)[i]);
+                            jButton33.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==4 && i == 3){
+                            jButton40.setText(solucion.get(x)[i]);
+                            jButton40.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==4 && i == 4){
+                            jButton41.setText(solucion.get(x)[i]);
+                            jButton41.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==4 && i == 5){
+                            jButton42.setText(solucion.get(x)[i]);
+                            jButton42.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==4 && i == 6){
+                            jButton49.setText(solucion.get(x)[i]);
+                            jButton49.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==4 && i == 7){
+                            jButton50.setText(solucion.get(x)[i]);
+                            jButton50.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==4 && i == 8){
+                            jButton51.setText(solucion.get(x)[i]);
+                            jButton51.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==5 && i == 0){
+                            jButton34.setText(solucion.get(x)[i]);
+                            jButton34.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==5 && i == 1){
+                            jButton35.setText(solucion.get(x)[i]);
+                            jButton35.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==5 && i == 2){
+                            jButton36.setText(solucion.get(x)[i]);
+                            jButton36.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==5 && i == 3){
+                            jButton43.setText(solucion.get(x)[i]);
+                            jButton43.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==5 && i == 4){
+                            jButton44.setText(solucion.get(x)[i]);
+                            jButton44.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==5 && i == 5){
+                            jButton45.setText(solucion.get(x)[i]);
+                            jButton45.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==5 && i == 6){
+                            jButton52.setText(solucion.get(x)[i]);
+                            jButton52.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==5 && i == 7){
+                            jButton53.setText(solucion.get(x)[i]);
+                            jButton53.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==5 && i == 8){
+                            jButton54.setText(solucion.get(x)[i]);
+                            jButton54.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==6 && i == 0){
+                            jButton55.setText(solucion.get(x)[i]);
+                            jButton55.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==6 && i == 1){
+                            jButton56.setText(solucion.get(x)[i]);
+                            jButton56.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==6 && i == 2){
+                            jButton57.setText(solucion.get(x)[i]);
+                            jButton57.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==6 && i == 3){
+                            jButton64.setText(solucion.get(x)[i]);
+                            jButton64.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==6 && i == 4){
+                            jButton65.setText(solucion.get(x)[i]);
+                            jButton65.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==6 && i == 5){
+                            jButton66.setText(solucion.get(x)[i]);
+                            jButton66.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==6 && i == 6){
+                            jButton73.setText(solucion.get(x)[i]);
+                            jButton73.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==6 && i == 7){
+                            jButton74.setText(solucion.get(x)[i]);
+                            jButton74.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==6 && i == 8){
+                            jButton75.setText(solucion.get(x)[i]);
+                            jButton75.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==7 && i == 0){
+                            jButton58.setText(solucion.get(x)[i]);
+                            jButton58.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==7 && i == 1){
+                            jButton59.setText(solucion.get(x)[i]);
+                            jButton59.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==7 && i == 2){
+                            jButton60.setText(solucion.get(x)[i]);
+                            jButton60.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==7 && i == 3){
+                            jButton67.setText(solucion.get(x)[i]);
+                            jButton67.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==7 && i == 4){
+                            jButton68.setText(solucion.get(x)[i]);
+                            jButton68.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==7 && i == 5){
+                            jButton69.setText(solucion.get(x)[i]);
+                            jButton69.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==7 && i == 6){
+                            jButton76.setText(solucion.get(x)[i]);
+                            jButton76.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==7 && i == 7){
+                            jButton77.setText(solucion.get(x)[i]);
+                            jButton77.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==7 && i == 8){
+                            jButton78.setText(solucion.get(x)[i]);
+                            jButton78.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==8 && i == 0){
+                            jButton61.setText(solucion.get(x)[i]);
+                            jButton61.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==8 && i == 1){
+                            jButton62.setText(solucion.get(x)[i]);
+                            jButton62.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==8 && i == 2){
+                            jButton63.setText(solucion.get(x)[i]);
+                            jButton63.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==8 && i == 3){
+                            jButton70.setText(solucion.get(x)[i]);
+                            jButton70.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==8 && i == 4){
+                            jButton71.setText(solucion.get(x)[i]);
+                            jButton71.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==8 && i == 5){
+                            jButton72.setText(solucion.get(x)[i]);
+                            jButton72.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==8 && i == 6){
+                            jButton79.setText(solucion.get(x)[i]);
+                            jButton79.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==8 && i == 7){
+                            jButton80.setText(solucion.get(x)[i]);
+                            jButton80.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }if(x==8 && i == 8){
+                            jButton81.setText(solucion.get(x)[i]);
+                            jButton81.setEnabled(false);
+                            matriz[x][i] = solucion.get(x)[i];
+                        }
+                        bandera = false;
+                    }
+                }
+            }
+            estadisticaSugerencia++;
+            contSugerencia--;
+        }botonSugerencia.setText("Sugerencia (" + contSugerencia + ")");
         
     }//GEN-LAST:event_botonSugerenciaActionPerformed
-
+/**
+ * Metodo de accion de boton el cual se encarga de guardar las coordenadas del boton para agregarle el numer indicado
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void jButton21ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton21ActionPerformed
         btnActual = jButton21;
         fila = 0;
         columna = 8;
         habilitarBotonesNum();
     }//GEN-LAST:event_jButton21ActionPerformed
-
+/**
+ * Metodo de accion del boton solucion el cual se encarga de mostrar la solucion del sudoku x en el tablero.
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     private void botonSolucionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonSolucionActionPerformed
+        c.suspend();
         deshabilitarBotonesNum();
         botonVerificar.setEnabled(false);
         botonSugerencia.setEnabled(false);
@@ -3021,9 +3542,10 @@ public class ventanaJuego extends javax.swing.JFrame {
         estadisticaErrores = 0;
     }//GEN-LAST:event_botonSolucionActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
+/**
+ * Metodo main de la ventana de juego
+ * @author  Kevin Lanzas, Jordi Segura
+ */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -3074,7 +3596,7 @@ public class ventanaJuego extends javax.swing.JFrame {
     private javax.swing.JButton botonVerificar;
     private javax.swing.JLabel cantVerificaciones;
     private javax.swing.JLabel cantidadDigitos;
-    private javax.swing.JLabel cantidadSug;
+    private javax.swing.JLabel cronometro;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;

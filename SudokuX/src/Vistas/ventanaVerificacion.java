@@ -5,14 +5,16 @@
 package Vistas;
 
 /**
- *
- * @author kevin
+ * clase ventanaVerificacion la cual se encarga de crear la ventana de verificacion
+ * @author  Kevin Lanzas, Jordi Segura
+ * @extend javax.swing.JFrame
  */
 public class ventanaVerificacion extends javax.swing.JFrame {
 
-    /**
-     * Creates new form ventanaVerificacion
-     */
+ /**
+ * Metodo constructor de la ventana de verificacion el cual se encarga de inicializar todos los componentes necesarios para crear la ventana y poner tdos los datos en la ventana.
+ * @author  Kevin Lanzas, Jordi Segura, 
+ */
     public ventanaVerificacion() {
         initComponents();
         if (String.valueOf(ventanaJuego.vacios[0]).length() == 6){
@@ -42,6 +44,7 @@ public class ventanaVerificacion extends javax.swing.JFrame {
         botonAceptar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Verificacion");
 
         jPanel2.setBackground(new java.awt.Color(102, 255, 102));
 
@@ -124,14 +127,18 @@ public class ventanaVerificacion extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+/**
+ * Metodo de accion de boton el cual se encarga de cerrar la ventana de verificacion
+ * @author Kevin Lanzas, Jordi Segura
+ */
     private void botonAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAceptarActionPerformed
         super.dispose();
     }//GEN-LAST:event_botonAceptarActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
+/**
+ * Metodo main de la ventana
+ * @author Kevin Lanzas, Jordi Segura
+ */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">

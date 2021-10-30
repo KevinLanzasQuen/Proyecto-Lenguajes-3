@@ -1,11 +1,46 @@
 :- use_module(library(clpfd)).
 
+
+
+%objetivo: Obtener una lista de 2 numeros entre 1 y 9, una posición xy
+%entrada:Un almacenador de lista
+%salida:Una lista de 2 digitos random
+%restricciones:NA
+
+randomSugerencia(R):-
+        randseq(1,9,R1),
+        randseq(1,9,R2),
+        my_append(R1,R2,R).
+
+%objetivo:Copiar 2 listas en una sola lista
+%entrada:2 listas y un resultado
+%salida:una lista con los elementos de las 2 listas
+%restricciones:que las entradas sean 2 listas
+
+
+my_append([], Cs, Cs).
+
+my_append([A|As],Bs,[A|Cs]):-
+          my_append(As, Bs, Cs).
+
+%objetivo:verificar que 2 numeros sean iguales o diferentes
+%entrada:2 numeros y un almacenador
+%salida:1 si los numeros son iguales 0 si son diferentes
+%restricciones:NA
+
+
 iguales(A,B,R):-
         A =\= B,
         R is 0.
 iguales(A,B,R):-
         A=B,
         R is 1.
+
+%objetivo:Verificar cuantos elementos de 2 listas son iguales
+%entrada:2 listas de 9 elementos
+%salida:un numero con la cantidad de elementos iguales entre las dos
+%listas restricciones:que las dos listas tengan 9 elementos
+
 
 similitudFilas([A,B,C,D,E,F,G,H,I],[A1,B1,C1,D1,E1,F1,G1,H1,I1],R):-
         iguales(A,A1,Q1),
@@ -18,6 +53,12 @@ similitudFilas([A,B,C,D,E,F,G,H,I],[A1,B1,C1,D1,E1,F1,G1,H1,I1],R):-
         iguales(H,H1,Q8),
         iguales(I,I1,Q9),
         R is Q1+Q2+Q3+Q4+Q5+Q6+Q7+Q8+Q9.
+
+%objetivo:Obtener el numero de elementos similares entre 2 matrices 9x9
+%entrada:2 matrices 9x9
+%salida:un numero con la cantidad de elementos iguales en ambas matrices
+%restricciones:que las entradas sean 2 matrices 9x9
+
 
 similitudMatrices([A,B,C,D,E,F,G,H,I],[A1,B1,C1,D1,E1,F1,G1,H1,I1],R):-
         similitudFilas(A,A1,Q1),
@@ -33,6 +74,11 @@ similitudMatrices([A,B,C,D,E,F,G,H,I],[A1,B1,C1,D1,E1,F1,G1,H1,I1],R):-
 
  /*----------------------------------------------------*/
 
+%objetivo:Verificar cuantos ceros hay en una matriz
+%entrada:una lista
+%salida:la cantidad de ceros dentro de la lista
+%restricciones:que la entrada sea unamatriz 9x9
+
 verificarEspaciosLibres([A,B,C,D,E,F,G,H,I],R):-
         verificaListaCero(A,P1),
         verificaListaCero(B,P2),
@@ -44,6 +90,12 @@ verificarEspaciosLibres([A,B,C,D,E,F,G,H,I],R):-
         verificaListaCero(H,P8),
         verificaListaCero(I,P9),
         R is P1+P2+P3+P4+P5+P6+P7+P8+P9.
+
+%objetivo:Verificar cuantos ceros tiene una lista
+%entrada:Una lista
+%salida:Cantidad de ceros de la lista
+%restricciones:Que la entrada sea de 9 elementos
+
 
 verificaListaCero([A,B,C,D,E,F,G,H,I],R):-
         esCero(A,R1),
@@ -57,6 +109,12 @@ verificaListaCero([A,B,C,D,E,F,G,H,I],R):-
         esCero(I,R9),
         R is R1+R2+R3+R4+R5+R6+R7+R8+R9.
 
+%objetivo:Verificar si un numero es cero
+%entrada:un numero
+%salida:Si el numero es un cero devuelve un 1 sino un 0
+%restricciones:NA
+
+
 esCero(A,R):-
         A =\= 0,
         R is 0.
@@ -66,6 +124,14 @@ esCero(A,R):-
         R is 1.
 
 /*------------------------------------------------------*/
+
+%objetivo:Generar una matriz con las pistas para el tablero
+%entrada:NA
+% salida:Devuelve una matriz de 9 listas cada lista con 3 numeros del 1
+% al 9
+%restricciones:NA
+
+
 matrizPistas(R):-
         crearLista1_9(2,P1),
         crearLista1_9(2,P2),
@@ -78,8 +144,20 @@ matrizPistas(R):-
         crearLista1_9(2,P9),
         R = [P1,P2,P3,P4,P5,P6,P7,P8,P9].
 
+%objetivo:crear una lista de n elementos del 1 al 9
+%entrada:un n
+%salida:una lista con 3 elementos del 1 al 9
+%restricciones:que la entrada sea un numero
+
+
 crearLista1_9(I,R):-
         randseq(I, 9, R).
+
+%objetivo:Solucionar matrices de sudoku X
+%entrada:Una matriz de elementos
+%salida:Una matriz de numeros de tipo sudoku X
+%restricciones:NA
+
 
 sudoku(Rowx) :-
         length(Rowx, 9),
@@ -124,6 +202,12 @@ sudoku(Rowx) :-
         blocks(Ds, Es, Fs),
         blocks(Gs, Hs, Is).
 
+%objetivo:Obtener un elemento Pos de una lista
+%entrada:Una lista 2 posiciones
+%salida:El elemento de la posicion de la lista
+%restricciones:que sus entradas sean una lista de numeros y 2 posiciones
+
+
 obtenerElemento([_|L],Pos,PosAct,R):-
      Pos =\= PosAct,
      Pos1 is PosAct+1,
@@ -135,6 +219,13 @@ obtenerElemento([H|_],Pos,PosAct,R):-
      write(H),
      R is H.
 
+%objetivo:Verificar que los elementos de una cuadricula no se repitan,
+%así como los elementos de una lista y una columna
+%entrada:3 listas
+%salida:True si todos los elementos son distintos
+%restricciones:Que las listas sean de 9 elementos cada una.
+
+
 blocks([], [], []):-!.
 
 blocks([N1,N2,N3|Ns1], [N4,N5,N6|Ns2], [N7,N8,N9|Ns3]) :-
@@ -143,6 +234,10 @@ blocks([N1,N2,N3|Ns1], [N4,N5,N6|Ns2], [N7,N8,N9|Ns3]) :-
 
 
 
+%objetivo:Validar las posiciones de la X de una matriz de sudoku
+%entrada:Dos matrices
+%salida:True si lasvalidaciones están bien y los numeros no chocan
+%restricciones:Que las dos matrices sean 9x9
 
 validarX([A,B,C,D,_,F,G,H,I|_] ,Lista2):-
      validarPos(A,1,Lista2,1),
@@ -161,8 +256,13 @@ validarX([A,B,C,D,_,F,G,H,I|_] ,Lista2):-
      validarPos(H,8,Lista2,1),
      validarPos(I,1,Lista2,1),
      validarPos(I,9,Lista2,1),
-
      !.
+
+% objetivo:Validar que un numero en x posicion de una lista no esté en
+% la misma posicion que otra lista
+% entrada: salida: restricciones:Que las entradas sean un numero una
+% posicion, una lista y una posicion pibote
+
 
 validarPos(Num,Pos,[_|X],PosAct):-
      Pos =\= PosAct,
@@ -338,4 +438,3 @@ problem13(13, P) :-
              [_,6,_,5,_,8,_,2,_],
              [9,_,5,_,1,7,_,_,4],
              [1,_,3,4,_,_,_,7,_]],!.
-
