@@ -2422,6 +2422,7 @@ public class ventanaJuego extends javax.swing.JFrame {
         q = new Query(coneccion);
         Map<String, Term>[] res = q.allSolutions();
         vacios = res;
+        System.out.print(String.valueOf(vacios[0]).length());
        
         Query q2 = new Query("consult('test.pl')");
         q2.hasSolution();
@@ -2438,7 +2439,11 @@ public class ventanaJuego extends javax.swing.JFrame {
             botonSugerencia.setEnabled(false);
             botonSolucion.setEnabled(false);
         }else{
-            errores = 81 - Integer.parseInt("" + String.valueOf(similitud[0]).charAt(3) + String.valueOf(similitud[0]).charAt(4)) - Integer.parseInt("" + String.valueOf(vacios[0]).charAt(3) + String.valueOf(vacios[0]).charAt(4));
+            if(String.valueOf(vacios[0]).length() == 6){
+                 errores = 81 - Integer.parseInt("" + String.valueOf(similitud[0]).charAt(3) + String.valueOf(similitud[0]).charAt(4)) - Integer.parseInt("" + String.valueOf(vacios[0]).charAt(3) + String.valueOf(vacios[0]).charAt(4));
+            }else{
+                 errores = 81 - Integer.parseInt("" + String.valueOf(similitud[0]).charAt(3) + String.valueOf(similitud[0]).charAt(4)) - Integer.parseInt("" + String.valueOf(vacios[0]).charAt(3));
+            }
             estadisticaErrores = estadisticaErrores + errores;
             ventanaVerificacion vVerificacion = new ventanaVerificacion();
             vVerificacion.setLocationRelativeTo(null);

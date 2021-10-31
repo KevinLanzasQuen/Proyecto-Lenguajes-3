@@ -17,13 +17,15 @@ public class ventanaVerificacion extends javax.swing.JFrame {
  */
     public ventanaVerificacion() {
         initComponents();
-        if (String.valueOf(ventanaJuego.vacios[0]).length() == 6){
-            CantidadBlancos.setText("La cantidad de espacios vacios es: " + String.valueOf(ventanaJuego.vacios[0]).charAt(3) + String.valueOf(ventanaJuego.vacios[0]).charAt(4) );
+        if (String.valueOf(ventanaJuego.vacios[0]).length() >= 6){
+            CantidadBlancos.setText("La cantidad de espacios vacios es: " + String.valueOf(ventanaJuego.vacios[0]).charAt(3) + String.valueOf(ventanaJuego.vacios[0]).charAt(4));
         }else{
             CantidadBlancos.setText("La cantidad de espacios vacios es: " + String.valueOf(ventanaJuego.vacios[0]).charAt(3));
         }
         cantidadErrores.setText("La cantidad de errores es: " + String.valueOf(ventanaJuego.errores));
     }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
